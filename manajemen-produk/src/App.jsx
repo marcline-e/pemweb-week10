@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ProductList from "./components/organisms/ProductList";
 import ProductFormModal from "./components/organisms/ProductFormModal";
+import DeleteProductModal from "./components/organisms/DeleteProductModal";
 import SearchBar from "./components/molecules/SearchBar";
 import Button from "./components/atoms/Button";
 import { initialProducts } from "./data/products";
@@ -17,7 +18,7 @@ function App() {
 
   const closeModal = () => setModal(null);
 
-  // Tambah: bikin array BARU = produk lama + produk baru
+  // Tambah: array BARU = produk lama + produk baru
   const handleAdd = ({ name, price }) => {
     const newId =
       products.length > 0 ? Math.max(...products.map((p) => p.id)) + 1 : 1;
@@ -25,7 +26,7 @@ function App() {
     closeModal();
   };
 
-  // Edit: bikin array BARU, produk yang id-nya cocok diganti datanya
+  // Edit: array BARU, produk yang id-nya cocok diganti datanya
   const handleUpdate = ({ name, price }) => {
     setProducts(
       products.map((p) =>
@@ -35,8 +36,11 @@ function App() {
     closeModal();
   };
 
-  // Sementara: hapus masih log ke console, pop-up-nya di langkah berikutnya
-  const handleDelete = (product) => console.log("Hapus:", product);
+  // Hapus: array BARU berisi semua produk KECUALI yang id-nya dihapus
+  const handleDelete = (id) => {
+    setProducts(products.filter((p) => p.id !== id));
+    closeModal();
+  };
 
   return (
     <div className="app">
@@ -56,7 +60,7 @@ function App() {
       <ProductList
         products={filteredProducts}
         onEdit={(product) => setModal({ type: "edit", product })}
-        onDelete={handleDelete}
+        onDelete={(product) => setModal({ type: "delete", product })}
       />
 
       <p className="footer-info">
@@ -73,6 +77,14 @@ function App() {
           product={modal.product}
           onClose={closeModal}
           onSubmit={handleUpdate}
+        />
+      )}
+
+      {modal?.type === "delete" && (
+        <DeleteProductModal
+          product={modal.product}
+          onClose={closeModal}
+          onConfirm={handleDelete}
         />
       )}
     </div>
