@@ -1,8 +1,12 @@
-import ProductCard from "./components/molecules/ProductCard";
+import { useState } from "react";
+import ProductList from "./components/organisms/ProductList";
 import { initialProducts } from "./data/products";
 
 function App() {
-  // Sementara: cuma buat ngetes tombol, nanti diganti logic beneran
+  // State: papan tulis daftar produk, awalnya diisi data awal
+  const [products, setProducts] = useState(initialProducts);
+
+  // Sementara: cuma log ke console, nanti diganti pop-up
   const handleEdit = (product) => console.log("Edit:", product);
   const handleDelete = (product) => console.log("Hapus:", product);
 
@@ -15,13 +19,15 @@ function App() {
         </div>
       </header>
 
-      <div className="product-grid">
-        <ProductCard
-          product={initialProducts[0]}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
+      <div className="toolbar">
+        <span className="product-count">{products.length} produk</span>
       </div>
+
+      <ProductList
+        products={products}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
     </div>
   );
 }
